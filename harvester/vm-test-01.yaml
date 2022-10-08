@@ -1,0 +1,107 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  annotations:
+    harvesterhci.io/vmRunStrategy: RerunOnFailure
+    harvesterhci.io/volumeClaimTemplates: '[{"metadata":{"name":"test-01-disk-0-8qp83","annotations":{"harvesterhci.io/imageId":"default/image-5b8vl"}},"spec":{"accessModes":["ReadWriteMany"],"resources":{"requests":{"storage":"10Gi"}},"volumeMode":"Block","storageClassName":"longhorn-image-5b8vl"}}]'
+    kubevirt.io/latest-observed-api-version: v1
+    kubevirt.io/storage-observed-api-version: v1alpha3
+    network.harvesterhci.io/ips: '[]'
+  creationTimestamp: "2022-10-08T20:48:46Z"
+  finalizers:
+  - wrangler.cattle.io/VMController.UnsetOwnerOfPVCs
+  generation: 2
+  labels:
+    harvesterhci.io/creator: harvester
+    harvesterhci.io/os: ""
+    kustomize.toolkit.fluxcd.io/name: harvester
+    kustomize.toolkit.fluxcd.io/namespace: flux-system
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:conditions: {}
+    manager: Go-http-client
+    operation: Update
+    time: "2022-10-08T20:50:46Z"
+  name: test-01
+  namespace: default
+  resourceVersion: "11460303"
+  uid: 8515ba09-37b3-4333-9889-27ad39a8e83b
+spec:
+  runStrategy: RerunOnFailure
+  template:
+    metadata:
+      annotations:
+        harvesterhci.io/sshNames: '[]'
+      creationTimestamp: null
+      labels:
+        harvesterhci.io/vmName: test-01
+        harvesterhci.io/vmNamePrefix: test
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  harvesterhci.io/vmNamePrefix: test
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  harvesterhci.io/vmNamePrefix: test
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      domain:
+        cpu:
+          cores: 4
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+          - bootOrder: 1
+            disk:
+              bus: virtio
+            name: disk-0
+          - disk:
+              bus: virtio
+            name: cloudinitdisk
+          inputs:
+          - bus: usb
+            name: tablet
+            type: tablet
+          interfaces:
+          - bridge: {}
+            macAddress: d2:97:29:3d:f3:e8
+            model: virtio
+            name: default
+        features:
+          acpi:
+            enabled: true
+        machine:
+          type: q35
+        memory:
+          guest: 8092Mi
+        resources:
+          limits:
+            cpu: "4"
+            memory: 8Gi
+          requests:
+            cpu: 250m
+            memory: 5461Mi
+      evictionStrategy: LiveMigrate
+      networks:
+      - multus:
+          networkName: default/guest
+        name: default
+      volumes:
+      - name: disk-0
+        persistentVolumeClaim:
+          claimName: test-01-disk-0-8qp83
+      - cloudInitNoCloud:
+          networkDataSecretRef:
+            name: test-01-kyrv7
+          secretRef:
+            name: test-01-kyrv7
+        name: cloudinitdisk
