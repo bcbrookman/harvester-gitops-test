@@ -82,14 +82,14 @@ spec:
         machine:
           type: q35
         memory:
-          guest: 8092Mi
+          guest: 4096Mi
         resources:
           limits:
             cpu: "4"
-            memory: 8Gi
+            memory: 4Gi
           requests:
             cpu: 250m
-            memory: 5461Mi
+            memory: 2731Mi  # memory / 1.5 (default memory overcommit ratio)
       evictionStrategy: LiveMigrate
       networks:
       - multus:
